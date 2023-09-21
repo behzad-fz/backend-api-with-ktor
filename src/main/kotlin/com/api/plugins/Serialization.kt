@@ -1,4 +1,4 @@
-package com.example.plugins
+package com.api.plugins
 
 import io.ktor.serialization.gson.*
 import io.ktor.serialization.kotlinx.json.*

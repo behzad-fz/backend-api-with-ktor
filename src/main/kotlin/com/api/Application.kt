@@ -1,6 +1,8 @@
-package com.example
+package com.api
 
-import com.example.plugins.*
+import com.api.plugins.configureRouting
+import com.api.plugins.configureSerialization
+import com.api.plugins.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
