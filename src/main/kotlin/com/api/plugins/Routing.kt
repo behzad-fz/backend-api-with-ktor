@@ -16,6 +16,10 @@ fun Application.configureRouting() {
         }
 
         route("/items") {
+            get {
+                call.respond(com.api.plugins.items)
+            }
+
             post {
                 val newItem = call.receive<Item>()
                 com.api.plugins.items.add(newItem)
