@@ -25,6 +25,20 @@ fun Application.configureRouting() {
                 com.api.plugins.items.add(newItem)
                 call.respond(HttpStatusCode.Created, newItem)
             }
+
+            get("/{id}") {
+                val itemId = call.parameters["id"]?.toIntOrNull()
+                if (itemId != null) {
+                    val item = com.api.plugins.items.find { it.id == itemId }
+                    if (item != null) {
+                        call.respond(item)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound)
+                    }
+                } else {
+                    call.respond(HttpStatusCode.BadRequest)
+                }
+            }
         }
     }
 }
