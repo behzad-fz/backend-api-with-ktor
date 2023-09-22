@@ -25,6 +25,50 @@ fun Application.configureRouting() {
                 com.api.plugins.items.add(newItem)
                 call.respond(HttpStatusCode.Created, newItem)
             }
+
+            get("/{id}") {
+                val itemId = call.parameters["id"]?.toIntOrNull()
+                if (itemId != null) {
+                    val item = com.api.plugins.items.find { it.id == itemId }
+                    if (item != null) {
+                        call.respond(item)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound)
+                    }
+                } else {
+                    call.respond(HttpStatusCode.BadRequest)
+                }
+            }
+
+            put("/{id}") {
+                val itemId = call.parameters["id"]?.toIntOrNull()
+                if (itemId != null) {
+                    val updatedItem = call.receive<Item>()
+                    val existingItemIndex = com.api.plugins.items.indexOfFirst { it.id == itemId }
+                    if (existingItemIndex != -1) {
+                        com.api.plugins.items[existingItemIndex] = updatedItem
+                        call.respond(updatedItem)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound)
+                    }
+                } else {
+                    call.respond(HttpStatusCode.BadRequest)
+                }
+            }
+
+            delete("/{id}") {
+                val itemId = call.parameters["id"]?.toIntOrNull()
+                if (itemId != null) {
+                    val removedItem = com.api.plugins.items.removeIf { it.id == itemId }
+                    if (removedItem) {
+                        call.respond(HttpStatusCode.NoContent)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound)
+                    }
+                } else {
+                    call.respond(HttpStatusCode.BadRequest)
+                }
+            }
         }
     }
 }
