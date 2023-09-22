@@ -55,6 +55,20 @@ fun Application.configureRouting() {
                     call.respond(HttpStatusCode.BadRequest)
                 }
             }
+
+            delete("/{id}") {
+                val itemId = call.parameters["id"]?.toIntOrNull()
+                if (itemId != null) {
+                    val removedItem = com.api.plugins.items.removeIf { it.id == itemId }
+                    if (removedItem) {
+                        call.respond(HttpStatusCode.NoContent)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound)
+                    }
+                } else {
+                    call.respond(HttpStatusCode.BadRequest)
+                }
+            }
         }
     }
 }
