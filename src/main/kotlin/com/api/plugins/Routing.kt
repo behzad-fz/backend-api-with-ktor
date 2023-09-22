@@ -39,6 +39,22 @@ fun Application.configureRouting() {
                     call.respond(HttpStatusCode.BadRequest)
                 }
             }
+
+            put("/{id}") {
+                val itemId = call.parameters["id"]?.toIntOrNull()
+                if (itemId != null) {
+                    val updatedItem = call.receive<Item>()
+                    val existingItemIndex = com.api.plugins.items.indexOfFirst { it.id == itemId }
+                    if (existingItemIndex != -1) {
+                        com.api.plugins.items[existingItemIndex] = updatedItem
+                        call.respond(updatedItem)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound)
+                    }
+                } else {
+                    call.respond(HttpStatusCode.BadRequest)
+                }
+            }
         }
     }
 }
