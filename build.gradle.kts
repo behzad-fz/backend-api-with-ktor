@@ -32,4 +32,9 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    implementation("io.ktor:ktor-jackson:1.6.3")
+    implementation("org.jetbrains.exposed:exposed-core:0.39.2")
+    implementation("org.jetbrains.exposed:exposed-dao:0.39.2")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.39.2")
+    implementation("org.postgresql:postgresql:42.2.24")
 }
