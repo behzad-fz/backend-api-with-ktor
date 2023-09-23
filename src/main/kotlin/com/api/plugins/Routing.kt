@@ -6,8 +6,14 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.transactions.transaction
 
 val items = mutableListOf(Item(1, "Item 1"), Item(2, "Item 2"))
+object ItemsTable : IntIdTable() {
+    val name = varchar("name", 255)
+}
 
 fun Application.configureRouting() {
     routing {
@@ -22,10 +28,15 @@ fun Application.configureRouting() {
 
             post {
                 val newItem = call.receive<Item>()
-                com.api.plugins.items.add(newItem)
-                call.respond(HttpStatusCode.Created, newItem)
-            }
+                val itemId = transaction {
+                    ItemsTable.insertAndGetId {
+                        it[name] = newItem.name
+                    }
+                }
 
+                call.respond(HttpStatusCode.Created, Item(itemId.value, newItem.name))
+            }
+            
             get("/{id}") {
                 val itemId = call.parameters["id"]?.toIntOrNull()
                 if (itemId != null) {
